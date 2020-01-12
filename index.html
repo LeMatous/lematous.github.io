@@ -6,17 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Hexo</title>
+  <title>LeMatous的个人博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
+<meta property="og:title" content="LeMatous的个人博客">
 <meta property="og:url" content="http://yoursite.com/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:site_name" content="LeMatous的个人博客">
 <meta property="og:locale" content="en_US">
-<meta property="article:author" content="John Doe">
+<meta property="article:author" content="LeMatous">
 <meta name="twitter:card" content="summary">
   
-    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="LeMatous的个人博客" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.png">
@@ -46,7 +46,7 @@
 			<img src="/assets/img/LeMatous.jpeg" class="js-avatar">
 		</a>
 		<hgroup>
-		  <h1 class="header-author"><a href="/">John Doe</a></h1>
+		  <h1 class="header-author"><a href="/">LeMatous</a></h1>
 		</hgroup>
 		
 
@@ -104,7 +104,7 @@
 				<img src="/assets/img/LeMatous.jpeg" class="js-avatar">
 			</div>
 			<hgroup>
-			  <h1 class="header-author js-header-author">John Doe</h1>
+			  <h1 class="header-author js-header-author">LeMatous</h1>
 			</hgroup>
 			
 			
@@ -159,7 +159,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/01/12/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0/">STM32学习笔记（使用固件库进行按键输入）</a>
+      <a class="article-title" href="/2020/01/12/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0/">使用固件库进行按键输入（基于指南者学习板）</a>
     </h1>
   
 
@@ -172,9 +172,29 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="第一章"><a href="#第一章" class="headerlink" title="第一章"></a>第一章</h2><p>内容<br> <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#if 0</span></span><br><span class="line">KEY_GPIO_Config();//初始化GPIO端口，配置成输入状态</span><br><span class="line"><span class="keyword">while</span>(1) //循环检测按键状态</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span>( Key_Scan(KEY_GPIO_PORT,KEY_GPIO_PIN) ) //按键按下打开LED</span><br><span class="line">	LED_GPIO_Config();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#endif</span></span><br></pre></td></tr></table></figure></p>
+        <h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>根据开发板硬件开发图，KEY1与KEY2分别由<em>PA0</em>与<em>PC13</em>两个I/O端口控制着</p>
+<blockquote>
+<p>当处于空闲时，I/O口处于低电平状态；当按键按下后，I/O口处于高点平状态，因此按键是上升沿有限</p>
+</blockquote>
+<p>要进行按键检测，我们必须配置如下寄存器：</p>
+<p>*通用功能I/O（GPIO）<br>*复位和时钟控制（RCC）</p>
 <hr>
-<h2 id="第二章"><a href="#第二章" class="headerlink" title="第二章"></a>第二章</h2><hr>
+<h3 id="寄存器配置"><a href="#寄存器配置" class="headerlink" title="寄存器配置"></a>寄存器配置</h3><p>由于固件库已经对寄存器进行封装，这里我们只需要调用相应的函数进行配置就可以了<br> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> <span class="function"><span class="keyword">void</span> <span class="title">KEY_GPIO_Config</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	GPIO_InitTypeDef GPIO_InitStruct;</span><br><span class="line">	</span><br><span class="line">	RCC_APB2PeriphClockCmd(KEY_GPIO_CLK, ENABLE);									<span class="comment">//打开RCC寄存器配置时钟</span></span><br><span class="line">	</span><br><span class="line">	GPIO_InitStruct.GPIO_Pin = KEY_GPIO_PIN;</span><br><span class="line">	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN_FLOATING;</span><br><span class="line"></span><br><span class="line">	</span><br><span class="line">	GPIO_Init(KEY_GPIO_PORT, &amp;GPIO_InitStruct);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>按键配置函数<br> GPIO_Init函数有三个结构体变量需要我们进行配置<br> 这里由于是输入状态，因此我们只配置端口（<em>PA0</em>）与模式（<em>浮空输入模式</em>）</p>
+</blockquote>
+<hr>
+<h3 id="主函数编写"><a href="#主函数编写" class="headerlink" title="主函数编写"></a>主函数编写</h3><p>这里我们利用开发板上自带的LED灯来对按键是否成功检测进行实验</p>
+<blockquote>
+<p>按下按键后路灯亮，再次按下后灭，进行循环</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">if</span> 1</span></span><br><span class="line">	KEY_GPIO_Config();</span><br><span class="line">	LED_GPIO_Config();</span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>)												<span class="comment">//循环检测按键状态</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span>( Key_Scan(KEY_GPIO_PORT,KEY_GPIO_PIN) == KEY_ON )						<span class="comment">//按键按下打开LED</span></span><br><span class="line">			LED_G_TOGGLE;									<span class="comment">//宏定义实现LED状态翻转</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+
+<p>宏定义实现LED状态翻转是利用异或函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LED_G_TOGGLE					&#123;LED_G_GPIO_PORT-&gt;ODR ^= LED_G_GPIO_PIN; &#125;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
 
       
 
@@ -183,6 +203,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">STM32学习笔记</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -302,7 +333,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2020 John Doe
+    		&copy; 2020 LeMatous
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -383,6 +414,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">STM32学习笔记</a>
+              </li>
             
             <div class="clearfix"></div>
           </ul>
@@ -464,7 +499,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
     
     	<section class="tools-section tools-section-me" q-show="aboutme">
   	  	
-  	  		<div class="aboutme-wrap" id="js-aboutme">很惭愧&lt;br&gt;&lt;br&gt;只做了一点微小的工作&lt;br&gt;谢谢大家</div>
+  	  		<div class="aboutme-wrap" id="js-aboutme">目前在四川大学读本科生&lt;br&gt;</div>
   	  	
     	</section>
     
