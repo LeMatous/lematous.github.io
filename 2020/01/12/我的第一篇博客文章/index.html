@@ -7,15 +7,15 @@
   
   <title>STM32学习笔记（使用固件库进行按键输入） | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="第一章内容 12345678#if 0KEY_GPIO_Config();								&#x2F;&#x2F;初始化GPIO端口，配置成输入状态while(1)										&#x2F;&#x2F;循环检测按键状态&amp;#123;	if( Key_Scan(KEY_GPIO_PORT,KEY_GPIO_PIN) )	&#x2F;&#x2F;按键按下打开LED	LED_GPIO_Config();&amp;#125;#endif  第二章">
+  <meta name="description" content="第一章内容 12345678#if 0KEY_GPIO_Config();&#x2F;&#x2F;初始化GPIO端口，配置成输入状态while(1) &#x2F;&#x2F;循环检测按键状态&amp;#123;	if( Key_Scan(KEY_GPIO_PORT,KEY_GPIO_PIN) ) &#x2F;&#x2F;按键按下打开LED	LED_GPIO_Config();&amp;#125;#endif  第二章">
 <meta property="og:type" content="article">
 <meta property="og:title" content="STM32学习笔记（使用固件库进行按键输入）">
 <meta property="og:url" content="http://yoursite.com/2020/01/12/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2%E6%96%87%E7%AB%A0/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="第一章内容 12345678#if 0KEY_GPIO_Config();								&#x2F;&#x2F;初始化GPIO端口，配置成输入状态while(1)										&#x2F;&#x2F;循环检测按键状态&amp;#123;	if( Key_Scan(KEY_GPIO_PORT,KEY_GPIO_PIN) )	&#x2F;&#x2F;按键按下打开LED	LED_GPIO_Config();&amp;#125;#endif  第二章">
+<meta property="og:description" content="第一章内容 12345678#if 0KEY_GPIO_Config();&#x2F;&#x2F;初始化GPIO端口，配置成输入状态while(1) &#x2F;&#x2F;循环检测按键状态&amp;#123;	if( Key_Scan(KEY_GPIO_PORT,KEY_GPIO_PIN) ) &#x2F;&#x2F;按键按下打开LED	LED_GPIO_Config();&amp;#125;#endif  第二章">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-01-12T05:14:20.000Z">
-<meta property="article:modified_time" content="2020-01-12T05:22:19.218Z">
+<meta property="article:modified_time" content="2020-01-12T05:43:16.302Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -88,7 +88,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="第一章"><a href="#第一章" class="headerlink" title="第一章"></a>第一章</h2><p>内容<br> <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#if 0</span></span><br><span class="line">KEY_GPIO_Config();								//初始化GPIO端口，配置成输入状态</span><br><span class="line"><span class="keyword">while</span>(1)										//循环检测按键状态</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span>( Key_Scan(KEY_GPIO_PORT,KEY_GPIO_PIN) )	//按键按下打开LED</span><br><span class="line">	LED_GPIO_Config();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#endif</span></span><br></pre></td></tr></table></figure></p>
+        <h2 id="第一章"><a href="#第一章" class="headerlink" title="第一章"></a>第一章</h2><p>内容<br> <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#if 0</span></span><br><span class="line">KEY_GPIO_Config();//初始化GPIO端口，配置成输入状态</span><br><span class="line"><span class="keyword">while</span>(1) //循环检测按键状态</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span>( Key_Scan(KEY_GPIO_PORT,KEY_GPIO_PIN) ) //按键按下打开LED</span><br><span class="line">	LED_GPIO_Config();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#endif</span></span><br></pre></td></tr></table></figure></p>
 <hr>
 <h2 id="第二章"><a href="#第二章" class="headerlink" title="第二章"></a>第二章</h2><hr>
 
